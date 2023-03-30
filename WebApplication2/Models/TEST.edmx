@@ -1,0 +1,338 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="TestinterviewModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="cabang">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nama_cab" Type="nvarchar" MaxLength="50" />
+          <Property Name="kode_cab" Type="nvarchar" MaxLength="5" />
+          <Property Name="aktif" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="karyawan">
+          <Key>
+            <PropertyRef Name="id_karyawan" />
+          </Key>
+          <Property Name="id_karyawan" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="cabang_id" Type="int" />
+          <Property Name="kode_kar" Type="nvarchar" MaxLength="30" />
+          <Property Name="nama" Type="nvarchar" MaxLength="50" />
+          <Property Name="aktif" Type="bit" Nullable="false" />
+          <Property Name="no_telp" Type="nvarchar" MaxLength="30" />
+        </EntityType>
+        <EntityType Name="tax">
+          <Key>
+            <PropertyRef Name="taxId" />
+          </Key>
+          <Property Name="taxId" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nama" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="multiply" Type="float" Nullable="false" />
+          <Property Name="TaxIfcCode" Type="varchar" MaxLength="50" />
+          <Property Name="isDefault" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="transaksi">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="id_kar" Type="int" />
+          <Property Name="tax_id" Type="smallint" />
+          <Property Name="total_pem" Type="money" Nullable="false" />
+          <Property Name="price" Type="money" Nullable="false" />
+          <Property Name="qty" Type="float" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_karyawan_cabang">
+          <End Role="cabang" Type="Self.cabang" Multiplicity="0..1" />
+          <End Role="karyawan" Type="Self.karyawan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cabang">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="karyawan">
+              <PropertyRef Name="cabang_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transaksi_karyawan">
+          <End Role="karyawan" Type="Self.karyawan" Multiplicity="0..1" />
+          <End Role="transaksi" Type="Self.transaksi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="karyawan">
+              <PropertyRef Name="id_karyawan" />
+            </Principal>
+            <Dependent Role="transaksi">
+              <PropertyRef Name="id_kar" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transaksi_transaksi">
+          <End Role="tax" Type="Self.tax" Multiplicity="0..1" />
+          <End Role="transaksi" Type="Self.transaksi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tax">
+              <PropertyRef Name="taxId" />
+            </Principal>
+            <Dependent Role="transaksi">
+              <PropertyRef Name="tax_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="Printdatakar" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id_kar" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Save_cabang" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id" Type="int" Mode="In" />
+          <Parameter Name="nama_cab" Type="varchar" Mode="In" />
+          <Parameter Name="kode_cab" Type="nvarchar" Mode="In" />
+          <Parameter Name="aktif" Type="bit" Mode="In" />
+          <Parameter Name="Action" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="Save_transaksi" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id" Type="int" Mode="In" />
+          <Parameter Name="tax_id" Type="smallint" Mode="In" />
+          <Parameter Name="id_kar" Type="int" Mode="In" />
+          <Parameter Name="total_pem" Type="money" Mode="In" />
+          <Parameter Name="price" Type="money" Mode="In" />
+          <Parameter Name="qty" Type="float" Mode="In" />
+          <Parameter Name="Action" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="TestinterviewModelStoreContainer">
+          <EntitySet Name="cabang" EntityType="Self.cabang" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="karyawan" EntityType="Self.karyawan" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tax" EntityType="Self.tax" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="transaksi" EntityType="Self.transaksi" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_karyawan_cabang" Association="Self.FK_karyawan_cabang">
+            <End Role="cabang" EntitySet="cabang" />
+            <End Role="karyawan" EntitySet="karyawan" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transaksi_karyawan" Association="Self.FK_transaksi_karyawan">
+            <End Role="karyawan" EntitySet="karyawan" />
+            <End Role="transaksi" EntitySet="transaksi" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transaksi_transaksi" Association="Self.FK_transaksi_transaksi">
+            <End Role="tax" EntitySet="tax" />
+            <End Role="transaksi" EntitySet="transaksi" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TestinterviewModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="cabang">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nama_cab" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="kode_cab" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="aktif" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="karyawans" Relationship="Self.FK_mt_karyawan_mt_cabang" FromRole="cabang" ToRole="karyawan" />
+        </EntityType>
+        <EntityType Name="karyawan">
+          <Key>
+            <PropertyRef Name="id_karyawan" />
+          </Key>
+          <Property Name="id_karyawan" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="cabang_id" Type="Int32" />
+          <Property Name="kode_kar" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="nama" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="aktif" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="cabang" Relationship="Self.FK_mt_karyawan_mt_cabang" FromRole="karyawan" ToRole="cabang" />
+          <Property Name="no_telp" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="transaksis" Relationship="TestinterviewModel.FK_transaksi_karyawan" FromRole="karyawan" ToRole="transaksi" />
+        </EntityType>
+        <Association Name="FK_mt_karyawan_mt_cabang">
+          <End Role="cabang" Type="Self.cabang" Multiplicity="0..1" />
+          <End Role="karyawan" Type="Self.karyawan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cabang">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="karyawan">
+              <PropertyRef Name="cabang_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="TestinterviewEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="cabangs" EntityType="Self.cabang" />
+          <EntitySet Name="karyawans" EntityType="Self.karyawan" />
+          <AssociationSet Name="FK_mt_karyawan_mt_cabang" Association="Self.FK_mt_karyawan_mt_cabang">
+            <End Role="cabang" EntitySet="cabangs" />
+            <End Role="karyawan" EntitySet="karyawans" />
+          </AssociationSet>
+          <FunctionImport Name="Printdatakar" ReturnType="Collection(TestinterviewModel.Printdatakar_Result)">
+          <Parameter Name="id_kar" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Save_cabang">
+            <Parameter Name="id" Mode="In" Type="Int32" />
+            <Parameter Name="nama_cab" Mode="In" Type="String" />
+            <Parameter Name="kode_cab" Mode="In" Type="String" />
+            <Parameter Name="aktif" Mode="In" Type="Boolean" />
+            <Parameter Name="Action" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="taxes" EntityType="TestinterviewModel.tax" />
+          <EntitySet Name="transaksis" EntityType="TestinterviewModel.transaksi" />
+          <AssociationSet Name="FK_transaksi_karyawan" Association="TestinterviewModel.FK_transaksi_karyawan">
+            <End Role="karyawan" EntitySet="karyawans" />
+            <End Role="transaksi" EntitySet="transaksis" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transaksi_transaksi" Association="TestinterviewModel.FK_transaksi_transaksi">
+            <End Role="tax" EntitySet="taxes" />
+            <End Role="transaksi" EntitySet="transaksis" />
+          </AssociationSet>
+          <FunctionImport Name="Save_transaksi">
+            <Parameter Name="id" Mode="In" Type="Int32" />
+            <Parameter Name="tax_id" Mode="In" Type="Int16" />
+            <Parameter Name="id_kar" Mode="In" Type="Int32" />
+            <Parameter Name="total_pem" Mode="In" Type="Decimal" />
+            <Parameter Name="price" Mode="In" Type="Decimal" />
+            <Parameter Name="qty" Mode="In" Type="Double" />
+            <Parameter Name="Action" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="Printdatakar_Result">
+          <Property Type="String" Name="nama" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="nama_cab" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="kode_cab" Nullable="true" MaxLength="5" />
+          <Property Type="Int32" Name="id_karyawan" Nullable="false" />
+        </ComplexType>
+        <EntityType Name="tax">
+          <Key>
+            <PropertyRef Name="taxId" />
+          </Key>
+          <Property Name="taxId" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nama" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="multiply" Type="Double" Nullable="false" />
+          <Property Name="TaxIfcCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="isDefault" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="transaksis" Relationship="TestinterviewModel.FK_transaksi_transaksi" FromRole="tax" ToRole="transaksi" />
+        </EntityType>
+        <EntityType Name="transaksi">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="id_kar" Type="Int32" />
+          <Property Name="tax_id" Type="Int16" />
+          <Property Name="total_pem" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="price" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="qty" Type="Double" Nullable="false" />
+          <NavigationProperty Name="karyawan" Relationship="TestinterviewModel.FK_transaksi_karyawan" FromRole="transaksi" ToRole="karyawan" />
+          <NavigationProperty Name="tax" Relationship="TestinterviewModel.FK_transaksi_transaksi" FromRole="transaksi" ToRole="tax" />
+        </EntityType>
+        <Association Name="FK_transaksi_karyawan">
+          <End Type="TestinterviewModel.karyawan" Role="karyawan" Multiplicity="0..1" />
+          <End Type="TestinterviewModel.transaksi" Role="transaksi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="karyawan">
+              <PropertyRef Name="id_karyawan" />
+            </Principal>
+            <Dependent Role="transaksi">
+              <PropertyRef Name="id_kar" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transaksi_transaksi">
+          <End Type="TestinterviewModel.tax" Role="tax" Multiplicity="0..1" />
+          <End Type="TestinterviewModel.transaksi" Role="transaksi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tax">
+              <PropertyRef Name="taxId" />
+            </Principal>
+            <Dependent Role="transaksi">
+              <PropertyRef Name="tax_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TestinterviewModelStoreContainer" CdmEntityContainer="TestinterviewEntities">
+          <EntitySetMapping Name="cabangs">
+            <EntityTypeMapping TypeName="TestinterviewModel.cabang">
+              <MappingFragment StoreEntitySet="cabang">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="nama_cab" ColumnName="nama_cab" />
+                <ScalarProperty Name="kode_cab" ColumnName="kode_cab" />
+                <ScalarProperty Name="aktif" ColumnName="aktif" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="karyawans">
+            <EntityTypeMapping TypeName="TestinterviewModel.karyawan">
+              <MappingFragment StoreEntitySet="karyawan">
+                <ScalarProperty Name="no_telp" ColumnName="no_telp" />
+                <ScalarProperty Name="id_karyawan" ColumnName="id_karyawan" />
+                <ScalarProperty Name="cabang_id" ColumnName="cabang_id" />
+                <ScalarProperty Name="kode_kar" ColumnName="kode_kar" />
+                <ScalarProperty Name="nama" ColumnName="nama" />
+                <ScalarProperty Name="aktif" ColumnName="aktif" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="Printdatakar" FunctionName="TestinterviewModel.Store.Printdatakar">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="TestinterviewModel.Printdatakar_Result">
+                <ScalarProperty Name="nama" ColumnName="nama" />
+                <ScalarProperty Name="nama_cab" ColumnName="nama_cab" />
+                <ScalarProperty Name="kode_cab" ColumnName="kode_cab" />
+                <ScalarProperty Name="id_karyawan" ColumnName="id_karyawan" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Save_cabang" FunctionName="TestinterviewModel.Store.Save_cabang" />
+          <EntitySetMapping Name="taxes">
+            <EntityTypeMapping TypeName="TestinterviewModel.tax">
+              <MappingFragment StoreEntitySet="tax">
+                <ScalarProperty Name="isDefault" ColumnName="isDefault" />
+                <ScalarProperty Name="TaxIfcCode" ColumnName="TaxIfcCode" />
+                <ScalarProperty Name="multiply" ColumnName="multiply" />
+                <ScalarProperty Name="nama" ColumnName="nama" />
+                <ScalarProperty Name="taxId" ColumnName="taxId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="transaksis">
+            <EntityTypeMapping TypeName="TestinterviewModel.transaksi">
+              <MappingFragment StoreEntitySet="transaksi">
+                <ScalarProperty Name="qty" ColumnName="qty" />
+                <ScalarProperty Name="price" ColumnName="price" />
+                <ScalarProperty Name="total_pem" ColumnName="total_pem" />
+                <ScalarProperty Name="tax_id" ColumnName="tax_id" />
+                <ScalarProperty Name="id_kar" ColumnName="id_kar" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="Save_transaksi" FunctionName="TestinterviewModel.Store.Save_transaksi" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

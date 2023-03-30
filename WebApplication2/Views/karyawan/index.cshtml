@@ -1,0 +1,100 @@
+﻿@model IEnumerable<WebApplication2.viewmodels.karyawanvm>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Master Karyawan</h2>
+
+<p>
+    @Html.ActionLink("ADD NEW ", "Create", null, new { @class = "btn btn-primary btn-sm" })
+</p>
+
+@*@using (Html.BeginForm("Index", "kodepos", FormMethod.Get))
+    {
+        <p>
+            Search : @Html.TextBox("Searching", ViewBag.FilterValue as string)
+            @Html.DropDownList("Kriteria", ViewBag.ListKriteria as List<SelectListItem>, new { id = "Kriteria" })
+            <input type="submit" value="Cari" />
+        </p>
+    }*@
+
+@if (TempData["Sukses"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Sukses"]
+        <button type="button" class="close" data-dissmiss="alert" id="btnclose">
+            <span>&times;</span>
+        </button>
+    </div>
+}
+<table id="datakaryawan" class="table table-bordered table-striped table-hover">
+    <thead>
+        <tr>
+            <th>
+
+            </th>
+            <th>
+                Nama Karyawan
+            </th>
+            <th>
+                kode Karyawan
+            </th>
+            <th>
+                Cabang Site
+            </th>
+            <th>
+                Aktif
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count() > 0)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.id_karyawan }, new { @class = "btn btn-info btn-xs" }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.id_karyawan }, new { @class = "btn btn-danger btn-xs", onclick = "return confirm('Yakin Ingin DiHapus?');" }) |
+                        @Html.ActionLink("Print", "Print", new { id_karyawan = item.id_karyawan }, new { @class = "btn btn-info btn-xs" })
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nama)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.kode_kar)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nama_cabang)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.aktif)
+                    </td>
+                </tr>
+            }
+        }
+        else {
+            <tr>
+                <td colspan="8" class="text-center">
+                    <b>No Data Available.Please Add Data By CLick On Create Button</b>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script type="text/javascript">
+       var js = jQuery.noConflict(true);
+        js(document).ready(function () {
+            js('#datakaryawan').DataTable();
+            });
+    </script>
+    <script>
+        $(".btnclose").on("click", function (event) {
+            $(this).parent().fadeOut();
+            event.preventDefault();
+        });
+    </script>
+}

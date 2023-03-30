@@ -1,0 +1,115 @@
+﻿@model  WebApplication2.viewmodels.cabangvm
+@*@{
+        ViewBag.Title = "Index";
+    }*@
+<script src="~/Scripts/moment.min.js"></script>
+<script src="~/Scripts/moment.js"></script>
+<hr />
+<fieldset class="scheduler-border">
+    <legend class="scheduler-border">List Cabang</legend>
+    @*<div class="category-filter">
+            <select id="categoryFilter" class="form-control">
+                <option value="">Default</option>
+                <option value="ShowAll">Show All</option>
+            </select>
+        </div>*@
+
+    @*@if (TempData["Sukses"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["Sukses"]
+                <button type="button" class="close" data-dissmiss="alert" id="btnclose">
+                    <span>&times;</span>
+                </button>
+            </div>
+        }*@
+    <table id="datacabangs" class="table table-condensed table-bordered table-striped display nowrap">
+        <thead>
+            <tr>
+                <th>@Html.ActionLink("Add New", "Create", null, new { @class = "btn btn-primary" })</th>
+                <th> Cabang ID</th>
+                <th> Nama Cabang </th>
+                <th> Kode Cabang </th>
+                <th> Aktif </th>
+        </thead>
+    </table>
+
+</fieldset>
+@section Scripts {
+
+    <script type="text/javascript">
+            var table;
+            var selectedRows = [];
+            $(document).ready(function () {
+
+
+                table = $("#datacabangs").DataTable({
+                    processing: true,
+                    serverSide: true,
+                    paging: true,
+                    stateSave: true,
+                    "scrollX": true,
+                    "scrollCollapse": true,
+                    "dom": 'lrtip',
+                    "columnDefs": [
+                    {
+                       "width": "100%", "targets": 1
+                    }
+                    ],
+                    "order": [[0, "desc"]],
+                    //"oLanguage": {
+                    //    "sSearch": "Search : "
+                    //},
+                    "ajax": {
+                        "url": "@Url.Action("Listcabang", "cabang")",
+                        type: "post"
+
+                    },
+                    "columns": [
+                        {
+                            "data": "id",
+                            "searchable": false,
+                            "render": function (data, type, row, meta) {
+                                var btnEdit =  '<a class="btn btn-primary  btn-xs" href="../../cabang/Edit?id=' + data + ' ">Edit</a>' ;
+                                var btnDelete = ' | <a class="btn btn-primary  btn-xs" href="../../cabang/Deleted?id=' + data + '">Delete</a>';
+                                return btnEdit + btnDelete;
+                            }
+                        },
+                                { "data": "id" },
+                                { "data": "nama_cab_" },
+                                { "data": "kode_cab" },
+                                {
+                                    "data": "Aktif",
+                                    render: function (data, type, row) {
+                                        if (data == true) {
+                                            return '<input type="checkbox" onclick="return false;" checked>';
+                                        } else {
+                                            return '<input type="checkbox" onclick="return false;">';
+                                        }
+                                        return data;
+                                    }
+                                },
+                    ]
+                });
+
+                SearchDatatables(table, "cabangres");
+            });
+
+    </script>
+
+    <script src="~/Scripts/JqueryBallonNotif.js"></script>
+    <script src="~/Scripts/SearchDatatables.js"></script>
+
+    @*<script type="text/javascript">
+               var js = jQuery.noConflict(true);
+                js(document).ready(function () {
+                    js('#datacabang').DataTable();
+                    });
+        </script>
+        <script>
+                $(".btnclose").on("click", function (event) {
+                    $(this).parent().fadeOut();
+                    event.preventDefault();
+                });
+        </script>*@
+}
