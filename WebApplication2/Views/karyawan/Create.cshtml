@@ -1,0 +1,81 @@
+﻿@model WebApplication2.viewmodels.karyawanvm
+
+    @{
+        ViewBag.Title = "Create";
+    }
+
+    <link href="~/Content/jquery-confirm.min.css" rel="stylesheet" />
+
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.id_karyawan)
+        <div class="form-horizontal">
+
+            <h4>Create Karyawan</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="row">
+                <div class="column">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.nama, "Nama Karyawan", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.nama, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.nama, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.kode_kar, "Kode Karyawan", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(m => Model.kode_kar, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.kode_kar, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.no_telp, "No Telp", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(m => Model.no_telp, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.no_telp, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.cabang_id, "Cabang Site", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-9.5">
+                            <div class="input-group form-inline col-xs-3">
+                                @Html.EditorFor(model => model.nama_cabang, new { htmlAttributes = new { id = "namacabang_", @class = "form-control", @readonly = "readonly" } })
+                                <span class="input-group-btn" style="width:0;">
+                                    <button id="btn_kntl" type="button" class="btn btn-default btn-flat btn-searcharea">Cari</button>
+                                </span>
+                            </div>
+                            @Html.HiddenFor(m => m.cabang_id ,new { id = "cabang_id" })
+                            @Html.ValidationMessageFor(model => model.cabang_id, "", new { @class = "text-danger" })
+                            <span class="field-validation-valid text-danger emptyarea" style="display:none"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(Model => Model.aktif, "aktif", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.CheckBoxFor(Model => Model.aktif, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(Model => Model.aktif, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-10">
+                    @Html.ActionLink("Back", "Index", null, new { @class = "btn btn-default btn-flat" })
+                    <input type="submit" value="Save" class="btn btn-success" />
+                </div>
+            </div>
+        </div>
+    }
+
+
+    @Html.Partial("~/Views/karyawan/_modalcreate.cshtml")
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+        <script src="~/Scripts/jquery-confirm.min.js"></script>
+    }

@@ -1,0 +1,49 @@
+﻿<script type="text/javascript">
+    $('#btn_kntl').click(function (e) {
+        var d = $.dialog({
+            title: 'List Cabang',
+            content:
+            '<table id="cbng" class="table table-condensed table-bordered table-striped display nowrap">' +
+                '<thead>'+
+                    '<tr>' +
+                        '<th>Nama Cabang</th>'+
+                        '<th>Kode Cabang</th>'+
+                '</thead>'+
+            '</table>',
+            columnClass: 'large',
+            containerFluid: true,
+            useBootstrap: false,
+            draggable: true,
+            dragWindowBorder: false,
+            onContentReady: function () {
+                table = $("#cbng").DataTable({
+                    processing: true,
+                    serverSide: true,
+                    paging: true,
+                    "oLanguage": {
+                        "sSearch": "Search: "
+                    },
+                    "ajax": {
+                        "url": "@Url.Action("liscabang", "cabang")",
+                        //"data": { "LokasiId" : LokasiId },
+                        type: "post"
+                },
+                    "columns": [
+                                { "data": "nama_cab_" },
+                                { "data": "kode_cab" }
+                    ]
+                });
+
+                $('#cbng').on('click', 'tr', function () {
+                    $('#namacabang_').val(table.row(this).data().nama_cab_);
+                    $('#cabang_id').val(table.row(this).data().id);
+                    //$('#kodepos1').val(table.row(this).data().kodepos_);
+                    $('#kod_cab_').val(table.row(this).data().kode_cab);
+                    d.close();
+                });
+
+            }
+
+        });
+    });
+</script>
